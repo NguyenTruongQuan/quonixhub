@@ -1,24 +1,58 @@
--- AutoSkill Module
-local Tab = Window:MakeTab({Name="💥 Auto Skill"})
-_G.AutoSkill = {Z=false, X=false, C=false, V=false}
+local Tab = _G.Window:MakeTab({
+    Name = "🔥 Auto Skill",
+    Icon = "rbxassetid://6031071058",
+    PremiumOnly = false
+})
 
-for _, key in ipairs({"Z","X","C","V"}) do
-    Tab:AddToggle({
-        Name = "Auto Skill "..key,
-        Default = false,
-        Callback = function(v) _G.AutoSkill[key] = v end
-    })
-end
+_G.AutoSkillZ = false
+_G.AutoSkillX = false
+_G.AutoSkillC = false
 
-spawn(function()
-    while true do
-        for key,state in pairs(_G.AutoSkill) do
-            if state then
-                game:GetService("VirtualInputManager"):SendKeyEvent(true,key,false,game)
-                wait(0.1)
-                game:GetService("VirtualInputManager"):SendKeyEvent(false,key,false,game)
+Tab:AddToggle({
+    Name = "Tự động dùng Z",
+    Default = false,
+    Callback = function(v)
+        _G.AutoSkillZ = v
+        spawn(function()
+            while _G.AutoSkillZ do
+                pcall(function()
+                    game:GetService("VirtualInputManager"):SendKeyEvent(true, "Z", false, game)
+                end)
+                wait(2)
             end
-        end
-        wait(1)
+        end)
     end
-end)
+})
+
+Tab:AddToggle({
+    Name = "Tự động dùng X",
+    Default = false,
+    Callback = function(v)
+        _G.AutoSkillX = v
+        spawn(function()
+            while _G.AutoSkillX do
+                pcall(function()
+                    game:GetService("VirtualInputManager"):SendKeyEvent(true, "X", false, game)
+                end)
+                wait(2.5)
+            end
+        end)
+    end
+})
+
+Tab:AddToggle({
+    Name = "Tự động dùng C",
+    Default = false,
+    Callback = function(v)
+        _G.AutoSkillC = v
+        spawn(function()
+            while _G.AutoSkillC do
+                pcall(function()
+                    game:GetService("VirtualInputManager"):SendKeyEvent(true, "C", false, game)
+                end)
+                wait(3)
+            end
+        end)
+    end
+})
+
