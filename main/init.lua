@@ -21,9 +21,10 @@ local TabMain = Window:MakeTab({ Name = "🎮 Tự động", Icon = "rbxassetid:
 local TabESP = Window:MakeTab({ Name = "👁️ ESP", Icon = "rbxassetid://7733950768", PremiumOnly = false })
 local TabTP = Window:MakeTab({ Name = "🚀 Dịch chuyển", Icon = "rbxassetid://7733960981", PremiumOnly = false })
 
--- Load module và truyền Tab tương ứng
+-- Truyền Tabs vào môi trường toàn cục
 getgenv().QuonixTabs = { Main = TabMain, ESP = TabESP, TP = TabTP }
 
+-- Gọi các module
 loadstring(game:HttpGet("https://raw.githubusercontent.com/NguyenTruongQuan/QuonixHub/main/modules/AutoFarm.lua"))()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/NguyenTruongQuan/QuonixHub/main/modules/AutoQuest.lua"))()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/NguyenTruongQuan/QuonixHub/main/modules/AutoSkill.lua"))()
@@ -31,9 +32,10 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/NguyenTruongQuan/Quon
 loadstring(game:HttpGet("https://raw.githubusercontent.com/NguyenTruongQuan/QuonixHub/main/modules/ESP.lua"))()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/NguyenTruongQuan/QuonixHub/main/modules/Teleport.lua"))()
 
--- Hoàn tất
+-- Thông báo hoàn tất
 OrionLib:MakeNotification({
     Name = "Quonix Hub",
     Content = "Đã sẵn sàng chiến đấu!",
     Time = 5
 })
+
