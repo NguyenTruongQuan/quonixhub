@@ -1,73 +1,97 @@
 local OrionLib = {}
-OrionLib.__index = OrionLib
 
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
 local CoreGui = game:GetService("CoreGui")
-local TweenService = game:GetService("TweenService")
-local HttpService = game:GetService("HttpService")
 
--- Tạo GUI chính
-function OrionLib:MakeWindow(config)
-    local screen = Instance.new("ScreenGui", CoreGui)
-    screen.Name = "OrionHub"
-    screen.ResetOnSpawn = false
+-- Kiểm tra GUI cũ
+if CoreGui:FindFirstChild("Orion") then
+    CoreGui.Orion:Destroy()
+end
 
-    local frame = Instance.new("Frame", screen)
-    frame.Size = UDim2.new(0, 500, 0, 350)
-    frame.Position = UDim2.new(0.5, -250, 0.5, -175)
-    frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-    frame.Visible = false
-    local uic = Instance.new("UICorner", frame)
-    uic.CornerRadius = UDim.new(0, 8)
+-- GUI GỐC
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "Orion"
+ScreenGui.ResetOnSpawn = false
+ScreenGui.Parent = CoreGui
 
-    self.ScreenGui = screen
-    self.Main = frame
+-- CHỨC NĂNG: TẠO CỬA SỔ
+function OrionLib:MakeWindow(settings)
+    local Window = {}
+    local MainFrame = Instance.new("Frame")
+    MainFrame.Size = UDim2.new(0, 500, 0, 400)
+    MainFrame.Position = UDim2.new(0.5, -250, 0.5, -200)
+    MainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+    MainFrame.BorderSizePixel = 0
+    MainFrame.Name = settings.Name or "Orion Window"
+    MainFrame.Parent = ScreenGui
 
-    local window = {}
-    function window:MakeTab(opts)
-        local tabFrame = Instance.new("Frame", frame)
+    local UICorner = Instance.new("UICorner", MainFrame)
+    UICorner.CornerRadius = UDim.new(0, 8)
+
+    -- CẤU TRÚC TABS
+    local Tabs = {}
+    function Window:MakeTab(tabInfo)
+        local Tab = {}
+        local tabButton = Instance.new("TextButton")
+        tabButton.Text = tabInfo.Name
+        tabButton.Size = UDim2.new(0, 120, 0, 30)
+        tabButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+        tabButton.Parent = MainFrame
+
+        local tabFrame = Instance.new("Frame")
         tabFrame.Size = UDim2.new(1, 0, 1, -40)
         tabFrame.Position = UDim2.new(0, 0, 0, 40)
-        tabFrame.BackgroundTransparency = 1
+        tabFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+        tabFrame.Visible = false
+        tabFrame.Parent = MainFrame
 
-        local out = {}
-        function out:AddToggle(opt)
-            local btn = Instance.new("TextButton", tabFrame)
-            btn.Size = UDim2.new(1, -20, 0, 30)
-            btn.Position = UDim2.new(0, 10, 0, #tabFrame:GetChildren()*35)
-            btn.Text = "[ ] "..opt.Name
-            btn.BackgroundColor3 = Color3.fromRGB(50,50,50)
+        local UIList = Instance.new("UIListLayout", tabFrame)
+        UIList.Padding = UDim.new(0, 6)
+
+        tabButton.MouseButton1Click:Connect(function()
+            for _, other in pairs(Tabs) do
+                other.Frame.Visible = false
+            end
+            tabFrame.Visible = true
+        end)
+
+        Tab.Frame = tabFrame
+        Tabs[#Tabs+1] = Tab
+
+        function Tab:AddToggle(opt)
+            local Toggle = Instance.new("TextButton")
+            Toggle.Size = UDim2.new(1, -12, 0, 32)
+            Toggle.Text = "[OFF] " .. opt.Name
+            Toggle.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+            Toggle.Parent = tabFrame
+
             local state = opt.Default or false
-            btn.MouseButton1Click:Connect(function()
+            Toggle.MouseButton1Click:Connect(function()
                 state = not state
-                btn.Text = (state and "[✔] " or "[ ] ")..opt.Name
+                Toggle.Text = (state and "[ON] " or "[OFF] ") .. opt.Name
                 opt.Callback(state)
             end)
         end
-        function out:AddButton(opt)
-            local btn = Instance.new("TextButton", tabFrame)
-            btn.Size = UDim2.new(1, -20, 0, 30)
-            btn.Position = UDim2.new(0, 10, 0, #tabFrame:GetChildren()*35)
-            btn.Text = opt.Name
-            btn.BackgroundColor3 = Color3.fromRGB(70,70,70)
-            btn.MouseButton1Click:Connect(opt.Callback)
+
+        function Tab:AddButton(opt)
+            local Button = Instance.new("TextButton")
+            Button.Size = UDim2.new(1, -12, 0, 32)
+            Button.Text = opt.Name
+            Button.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+            Button.Parent = tabFrame
+
+            Button.MouseButton1Click:Connect(opt.Callback)
         end
-        function out:AddSlider(opt)
-            -- implement slider UI as needed
-        end
-        function out:AddDropdown(opt)
-            -- implement dropdown UI
-        end
-        return out
+
+        return Tab
     end
 
-    return window
+    return Window
 end
 
 function OrionLib:Init()
-    if self.Main then
-        self.Main.Visible = true
-    end
+    print("OrionLib đã khởi tạo!")
 end
 
 return OrionLib
-
