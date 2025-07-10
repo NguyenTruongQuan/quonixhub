@@ -14,3 +14,18 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/YourUser/QuonixHub/ma
 loadstring(game:HttpGet("https://raw.githubusercontent.com/YourUser/QuonixHub/main/modules/Teleport.lua"))()
 
 OrionLib:Init()
+-- Ẩn / hiện GUI bằng phím RightControl
+local UserInputService = game:GetService("UserInputService")
+local guiVisible = true
+
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if gameProcessed then return end
+    if input.KeyCode == Enum.KeyCode.RightControl then
+        guiVisible = not guiVisible
+        for _, gui in ipairs(game.CoreGui:GetChildren()) do
+            if gui.Name:find("Orion") then
+                gui.Enabled = guiVisible
+            end
+        end
+    end
+end)
