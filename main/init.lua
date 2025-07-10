@@ -46,9 +46,8 @@ Button.ZIndex = 999
 local guiVisible = true
 Button.MouseButton1Click:Connect(function()
     guiVisible = not guiVisible
-    for _, gui in ipairs(CoreGui:GetChildren()) do
-        if gui.Name:find("Orion") then
-            gui.Enabled = guiVisible
-        end
-    end
+    local targetGui = CoreGui:FindFirstChild("Orion") or CoreGui:FindFirstChild("OrionLib")
+if targetGui then
+    targetGui.Enabled = guiVisible
+end
 end)
