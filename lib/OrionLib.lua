@@ -1,66 +1,72 @@
 local OrionLib = {}
+OrionLib.__index = OrionLib
 
--- Tạo GUI gốc
-local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "OrionHub"
-ScreenGui.ResetOnSpawn = false
-ScreenGui.IgnoreGuiInset = true
-ScreenGui.Parent = game:GetService("CoreGui")
+local CoreGui = game:GetService("CoreGui")
+local TweenService = game:GetService("TweenService")
+local HttpService = game:GetService("HttpService")
 
--- Tạo Frame chính
-local MainFrame = Instance.new("Frame")
-MainFrame.Name = "MainFrame"
-MainFrame.Size = UDim2.new(0, 500, 0, 350)
-MainFrame.Position = UDim2.new(0.5, -250, 0.5, -175)
-MainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
-MainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-MainFrame.BorderSizePixel = 0
-MainFrame.Parent = ScreenGui
-MainFrame.Visible = false -- Khởi đầu ẩn
+-- Tạo GUI chính
+function OrionLib:MakeWindow(config)
+    local screen = Instance.new("ScreenGui", CoreGui)
+    screen.Name = "OrionHub"
+    screen.ResetOnSpawn = false
 
--- UI Corner bo tròn
-local UICorner = Instance.new("UICorner", MainFrame)
-UICorner.CornerRadius = UDim.new(0, 8)
+    local frame = Instance.new("Frame", screen)
+    frame.Size = UDim2.new(0, 500, 0, 350)
+    frame.Position = UDim2.new(0.5, -250, 0.5, -175)
+    frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    frame.Visible = false
+    local uic = Instance.new("UICorner", frame)
+    uic.CornerRadius = UDim.new(0, 8)
 
--- Thêm tiêu đề
-local Title = Instance.new("TextLabel", MainFrame)
-Title.Size = UDim2.new(1, 0, 0, 40)
-Title.Text = "🤡 Quonix Hub"
-Title.TextColor3 = Color3.fromRGB(255, 255, 255)
-Title.TextScaled = true
-Title.BackgroundTransparency = 1
-Title.Font = Enum.Font.GothamBold
+    self.ScreenGui = screen
+    self.Main = frame
 
--- === HÀM GỌI BÊN NGOÀI ===
-function OrionLib:MakeWindow(cfg)
-	MainFrame.Visible = true
-	return {
-		MakeTab = function(tabCfg)
-			-- Tab chỉ là khung nội dung đơn giản
-			local tab = Instance.new("Frame", MainFrame)
-			tab.Size = UDim2.new(1, 0, 1, -40)
-			tab.Position = UDim2.new(0, 0, 0, 40)
-			tab.BackgroundTransparency = 1
+    local window = {}
+    function window:MakeTab(opts)
+        local tabFrame = Instance.new("Frame", frame)
+        tabFrame.Size = UDim2.new(1, 0, 1, -40)
+        tabFrame.Position = UDim2.new(0, 0, 0, 40)
+        tabFrame.BackgroundTransparency = 1
 
-			return {
-				AddLabel = function(text)
-					local lbl = Instance.new("TextLabel", tab)
-					lbl.Size = UDim2.new(1, -20, 0, 30)
-					lbl.Position = UDim2.new(0, 10, 0, 10)
-					lbl.Text = text
-					lbl.TextColor3 = Color3.fromRGB(200, 200, 200)
-					lbl.BackgroundTransparency = 1
-					lbl.TextXAlignment = Enum.TextXAlignment.Left
-					lbl.Font = Enum.Font.Gotham
-					lbl.TextSize = 18
-				end
-			}
-		end
-	}
+        local out = {}
+        function out:AddToggle(opt)
+            local btn = Instance.new("TextButton", tabFrame)
+            btn.Size = UDim2.new(1, -20, 0, 30)
+            btn.Position = UDim2.new(0, 10, 0, #tabFrame:GetChildren()*35)
+            btn.Text = "[ ] "..opt.Name
+            btn.BackgroundColor3 = Color3.fromRGB(50,50,50)
+            local state = opt.Default or false
+            btn.MouseButton1Click:Connect(function()
+                state = not state
+                btn.Text = (state and "[✔] " or "[ ] ")..opt.Name
+                opt.Callback(state)
+            end)
+        end
+        function out:AddButton(opt)
+            local btn = Instance.new("TextButton", tabFrame)
+            btn.Size = UDim2.new(1, -20, 0, 30)
+            btn.Position = UDim2.new(0, 10, 0, #tabFrame:GetChildren()*35)
+            btn.Text = opt.Name
+            btn.BackgroundColor3 = Color3.fromRGB(70,70,70)
+            btn.MouseButton1Click:Connect(opt.Callback)
+        end
+        function out:AddSlider(opt)
+            -- implement slider UI as needed
+        end
+        function out:AddDropdown(opt)
+            -- implement dropdown UI
+        end
+        return out
+    end
+
+    return window
 end
 
 function OrionLib:Init()
-	-- Có thể xử lý logic init nếu muốn
+    if self.Main then
+        self.Main.Visible = true
+    end
 end
 
 return OrionLib
