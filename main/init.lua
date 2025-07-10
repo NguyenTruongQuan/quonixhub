@@ -3,7 +3,7 @@ repeat wait() until game:IsLoaded() and game.Players.LocalPlayer
 
 -- Load Lib GUI
 local OrionLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/YourUser/QuonixHub/main/lib/OrionLib.lua"))()
-local Window = OrionLib:MakeWindow({Name = "🍌 Quonix Hub - Blox Fruits", HidePremium = false, SaveConfig = true, ConfigFolder = "QuonixHub"})
+local Window = OrionLib:MakeWindow({Name = "🤡 Quonix Hub - Blox Fruits", Free của Nguyễn Trường Quân = false, SaveConfig = true, ConfigFolder = "QuonixHub"})
 
 -- Load từng module
 loadstring(game:HttpGet("https://raw.githubusercontent.com/YourUser/QuonixHub/main/modules/AutoFarm.lua"))()
