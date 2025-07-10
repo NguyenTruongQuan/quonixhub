@@ -1,4 +1,4 @@
-local Tab = _G.Window:MakeTab({
+local Tab = _G.QuonixWindow:MakeTab({
     Name = "👁️ ESP",
     Icon = "rbxassetid://6031075934",
     PremiumOnly = false
