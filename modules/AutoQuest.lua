@@ -1,4 +1,4 @@
-local Tab = _G.Window:MakeTab({
+local Tab = _G.QuonixWindow:MakeTab({
     Name = "📜 Auto Quest",
     Icon = "rbxassetid://6031071058",
     PremiumOnly = false
