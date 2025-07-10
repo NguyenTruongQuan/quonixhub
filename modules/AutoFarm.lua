@@ -1,20 +1,13 @@
--- AutoFarm Module cho Quonix Hub
-local Window = _G.QuonixWindow
-if not Window then
-    warn("⚠️ Không tìm thấy Window từ _G.QuonixWindow")
-    return
-end
-
-local Tab = Window:MakeTab({
+local Tab = _G.Window:MakeTab({
     Name = "⚔️ Auto Farm",
-    Icon = "rbxassetid://4483345998",
+    Icon = "rbxassetid://6031071053", -- hoặc rbxassetid://6031071053 là icon kiếm
     PremiumOnly = false
 })
 
 _G.AutoFarm = false
 
 Tab:AddToggle({
-    Name = "Bật Auto Farm",
+    Name = "Bật Auto Farm (tìm quái gần nhất)",
     Default = false,
     Callback = function(v)
         _G.AutoFarm = v
@@ -22,12 +15,11 @@ Tab:AddToggle({
             while _G.AutoFarm do
                 pcall(function()
                     local enemy = workspace.Enemies:FindFirstChildWhichIsA("Model")
-                    if enemy and enemy:FindFirstChild("HumanoidRootPart") then
-                        local hrp = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-                        if hrp then
-                            hrp.CFrame = enemy.HumanoidRootPart.CFrame * CFrame.new(0, 10, 0)
-                            game:GetService("VirtualInputManager"):SendKeyEvent(true, "Z", false, game)
-                        end
+                    if enemy and enemy:FindFirstChild("HumanoidRootPart") and enemy:FindFirstChild("Humanoid") and enemy.Humanoid.Health > 0 then
+                        local root = game.Players.LocalPlayer.Character.HumanoidRootPart
+                        root.CFrame = enemy.HumanoidRootPart.CFrame * CFrame.new(0, 10, 0)
+
+                        game:GetService("VirtualInputManager"):SendKeyEvent(true, "Z", false, game)
                     end
                 end)
                 wait(1)
@@ -35,4 +27,5 @@ Tab:AddToggle({
         end)
     end
 })
+
 
