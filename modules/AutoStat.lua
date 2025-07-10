@@ -1,4 +1,4 @@
-local Tab = _G.Window:MakeTab({
+local Tab = _G.QuonixWindow:MakeTab({
     Name = "📈 Auto Stat",
     Icon = "rbxassetid://6031215984",
     PremiumOnly = false
