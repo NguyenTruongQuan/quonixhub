@@ -10,44 +10,52 @@ local Window = OrionLib:MakeWindow({
 })
 
 -- Tải các Module chính
-loadstring(game:HttpGet("https://raw.githubusercontent.com/NguyenTruongQuan/QuonixHub/main/modules/AutoFarm.lua"))()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/NguyenTruongQuan/QuonixHub/main/modules/AutoQuest.lua"))()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/NguyenTruongQuan/QuonixHub/main/modules/AutoStat.lua"))()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/NguyenTruongQuan/QuonixHub/main/modules/AutoSkill.lua"))()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/NguyenTruongQuan/QuonixHub/main/modules/ESP.lua"))()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/NguyenTruongQuan/QuonixHub/main/modules/Teleport.lua"))()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/NguyenTruongQuan/QuonixHub/main/modules/AntiBan.lua"))()
+local modules = {
+    "AutoFarm",
+    "AutoQuest",
+    "AutoStat",
+    "AutoSkill",
+    "ESP",
+    "Teleport",
+    "AntiBan"
+}
+
+for _, mod in ipairs(modules) do
+    pcall(function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/NguyenTruongQuan/QuonixHub/main/modules/"..mod..".lua"))()
+    end)
+end
 
 OrionLib:Init()
 
--- Ẩn/hiện bằng avatar của người
-local UIS = game:GetService("UserInputService")
-local Players = game:GetService("Players")
-local StarterGui = game:GetService("StarterGui")
+-- === GUI Toggle bằng Avatar ===
 local CoreGui = game:GetService("CoreGui")
-
--- GUI Toggle qua Avatar Button
 local avatarUrl = "https://raw.githubusercontent.com/NguyenTruongQuan/QuonixHub/main/quan_avatar.png"
 
-local ScreenGui = Instance.new("ScreenGui", CoreGui)
+-- Tạo nút avatar toggle
+local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "QuonixToggle"
 ScreenGui.ResetOnSpawn = false
+ScreenGui.Parent = CoreGui
 
-local Button = Instance.new("ImageButton", ScreenGui)
+local Button = Instance.new("ImageButton")
 Button.Name = "AvatarToggle"
 Button.Size = UDim2.new(0, 64, 0, 64)
-Button.Position = UDim2.new(1, -70, 1, -70)
-Button.AnchorPoint = Vector2.new(0.5, 0.5)
+Button.Position = UDim2.new(1, -50, 1, -50)
+Button.AnchorPoint = Vector2.new(1, 1)
 Button.BackgroundTransparency = 1
 Button.Image = avatarUrl
-Button.ZIndex = 999
+Button.ZIndex = 9999
+Button.Parent = ScreenGui
 
--- Toggle GUI
+-- Toggle GUI visibility
 local guiVisible = true
 Button.MouseButton1Click:Connect(function()
     guiVisible = not guiVisible
-    local targetGui = CoreGui:FindFirstChild("Orion") or CoreGui:FindFirstChild("OrionLib")
-if targetGui then
-    targetGui.Enabled = guiVisible
-end
+    for _, gui in ipairs(CoreGui:GetChildren()) do
+        if gui.Name:find("Orion") then
+            gui.Enabled = guiVisible
+        end
+    end
 end)
+
