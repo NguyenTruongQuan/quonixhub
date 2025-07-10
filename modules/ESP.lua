@@ -1,24 +1,41 @@
--- ESP Module
-local Tab = Window:MakeTab({Name="👀 ESP"})
+local Tab = _G.Window:MakeTab({
+    Name = "👁️ ESP",
+    Icon = "rbxassetid://6031075934",
+    PremiumOnly = false
+})
 
-Tab:AddButton({Name="Hiển thị Người chơi",Callback=function()
-    for _, v in pairs(game.Players:GetPlayers()) do
-        if v ~= game.Players.LocalPlayer and v.Character then
-            local h = Instance.new("Highlight", v.Character)
-            h.FillColor = Color3.fromRGB(255, 0, 0)
-            h.Name = "ESP"
+_G.ESPEnabled = false
+
+Tab:AddToggle({
+    Name = "Hiện tên người chơi (Player ESP)",
+    Default = false,
+    Callback = function(v)
+        _G.ESPEnabled = v
+        while _G.ESPEnabled do
+            for _, plr in pairs(game.Players:GetPlayers()) do
+                if plr ~= game.Players.LocalPlayer and plr.Character and not plr.Character:FindFirstChild("ESPTag") then
+                    local tag = Instance.new("BillboardGui", plr.Character)
+                    tag.Name = "ESPTag"
+                    tag.Adornee = plr.Character:FindFirstChild("Head")
+                    tag.Size = UDim2.new(0, 100, 0, 40)
+                    tag.AlwaysOnTop = true
+
+                    local name = Instance.new("TextLabel", tag)
+                    name.Size = UDim2.new(1, 0, 1, 0)
+                    name.BackgroundTransparency = 1
+                    name.Text = plr.Name
+                    name.TextColor3 = Color3.new(1, 0, 0)
+                    name.TextScaled = true
+                end
+            end
+            wait(3)
         end
-    end
-end})
 
-Tab:AddButton({Name="Hiển thị Rương / Trái",Callback=function()
-    for _, obj in pairs(workspace:GetDescendants()) do
-        if obj:IsA("Model") and (obj.Name:find("Chest") or obj.Name:find("Fruit")) then
-            if not obj:FindFirstChild("ESP") then
-                local h = Instance.new("Highlight", obj)
-                h.FillColor = Color3.fromRGB(0, 255, 0)
-                h.Name = "ESP"
+        -- Tắt ESP
+        for _, plr in pairs(game.Players:GetPlayers()) do
+            if plr.Character and plr.Character:FindFirstChild("ESPTag") then
+                plr.Character.ESPTag:Destroy()
             end
         end
     end
-end})
+})
