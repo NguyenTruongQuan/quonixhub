@@ -18,7 +18,8 @@ local Window = OrionLib:MakeWindow({
     ConfigFolder = "QuonixHub"
 })
 
--- Tải các module
+-- Load các module chính
+local baseURL = "https://raw.githubusercontent.com/NguyenTruongQuan/QuonixHub/main/modules/"
 local function SafeLoad(url)
     local s, e = pcall(function()
         loadstring(game:HttpGet(url))()
@@ -26,7 +27,6 @@ local function SafeLoad(url)
     if not s then warn("Lỗi tải: " .. url) end
 end
 
-local baseURL = "https://raw.githubusercontent.com/NguyenTruongQuan/QuonixHub/main/modules/"
 SafeLoad(baseURL .. "AutoFarm.lua")
 SafeLoad(baseURL .. "AutoQuest.lua")
 SafeLoad(baseURL .. "AutoStat.lua")
@@ -37,38 +37,20 @@ SafeLoad(baseURL .. "AntiBan.lua")
 
 OrionLib:Init()
 
--- Thêm nút Avatar toggle GUI
-local avatarURL = "https://raw.githubusercontent.com/NguyenTruongQuan/QuonixHub/main/quan_avatar.png"
-
+-- Toggle GUI bằng phím RightControl
+local UIS = game:GetService("UserInputService")
 local CoreGui = game:GetService("CoreGui")
-local GuiService = game:GetService("GuiService")
-
-local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "QuonixToggle"
-ScreenGui.ResetOnSpawn = false
-ScreenGui.IgnoreGuiInset = true
-ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-ScreenGui.Parent = CoreGui
-
-local Button = Instance.new("ImageButton")
-Button.Name = "AvatarToggle"
-Button.Size = UDim2.new(0, 60, 0, 60)
-Button.Position = UDim2.new(1, -70, 1, -70)
-Button.AnchorPoint = Vector2.new(0.5, 0.5)
-Button.BackgroundTransparency = 1
-Button.Image = avatarURL
-Button.ZIndex = 999
-Button.Parent = ScreenGui
-
--- Toggle GUI
 local guiVisible = true
-Button.MouseButton1Click:Connect(function()
-    guiVisible = not guiVisible
-    for _, gui in pairs(CoreGui:GetChildren()) do
-        if gui.Name:find("Orion") then
-            gui.Enabled = guiVisible
+
+UIS.InputBegan:Connect(function(input, gameProcessed)
+    if gameProcessed then return end
+    if input.KeyCode == Enum.KeyCode.RightControl then
+        guiVisible = not guiVisible
+        for _, gui in ipairs(CoreGui:GetChildren()) do
+            if gui:IsA("ScreenGui") and gui.Name:find("Orion") then
+                gui.Enabled = guiVisible
+            end
         end
     end
 end)
-
 
