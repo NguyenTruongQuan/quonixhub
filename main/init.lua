@@ -27,7 +27,7 @@ local StarterGui = game:GetService("StarterGui")
 local CoreGui = game:GetService("CoreGui")
 
 -- GUI Toggle qua Avatar Button
-local avatarUrl = "https://raw.githubusercontent.com/NguyenTruongQuan/QuonixHub/main/assets/quan_avatar.png"
+local avatarUrl = "https://raw.githubusercontent.com/NguyenTruongQuan/QuonixHub/main/quan_avatar.png"
 
 local ScreenGui = Instance.new("ScreenGui", CoreGui)
 ScreenGui.Name = "QuonixToggle"
