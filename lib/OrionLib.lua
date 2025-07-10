@@ -1,71 +1,67 @@
 local OrionLib = {}
-OrionLib.__index = OrionLib
 
-local CoreGui = game:GetService("CoreGui")
-local TweenService = game:GetService("TweenService")
-local UserInputService = game:GetService("UserInputService")
-local HttpService = game:GetService("HttpService")
+-- Tạo GUI gốc
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "OrionHub"
+ScreenGui.ResetOnSpawn = false
+ScreenGui.IgnoreGuiInset = true
+ScreenGui.Parent = game:GetService("CoreGui")
 
-OrionLib.Settings = {
-	Name = "Orion Library",
-	SaveConfig = true,
-	ConfigFolder = "OrionLibConfig",
-	HidePremium = true
-}
+-- Tạo Frame chính
+local MainFrame = Instance.new("Frame")
+MainFrame.Name = "MainFrame"
+MainFrame.Size = UDim2.new(0, 500, 0, 350)
+MainFrame.Position = UDim2.new(0.5, -250, 0.5, -175)
+MainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+MainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+MainFrame.BorderSizePixel = 0
+MainFrame.Parent = ScreenGui
+MainFrame.Visible = false -- Khởi đầu ẩn
 
-OrionLib.Flags = {}
-OrionLib.CurrentTab = nil
+-- UI Corner bo tròn
+local UICorner = Instance.new("UICorner", MainFrame)
+UICorner.CornerRadius = UDim.new(0, 8)
 
-function OrionLib:MakeWindow(options)
-	local options = options or {}
-	for i,v in pairs(options) do
-		OrionLib.Settings[i] = v
-	end
+-- Thêm tiêu đề
+local Title = Instance.new("TextLabel", MainFrame)
+Title.Size = UDim2.new(1, 0, 0, 40)
+Title.Text = "🤡 Quonix Hub"
+Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+Title.TextScaled = true
+Title.BackgroundTransparency = 1
+Title.Font = Enum.Font.GothamBold
 
-	-- Tạo GUI chính
-	local ScreenGui = Instance.new("ScreenGui")
-	ScreenGui.Name = "Orion"
-	ScreenGui.ResetOnSpawn = false
-	ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Global
-	ScreenGui.Parent = CoreGui
+-- === HÀM GỌI BÊN NGOÀI ===
+function OrionLib:MakeWindow(cfg)
+	MainFrame.Visible = true
+	return {
+		MakeTab = function(tabCfg)
+			-- Tab chỉ là khung nội dung đơn giản
+			local tab = Instance.new("Frame", MainFrame)
+			tab.Size = UDim2.new(1, 0, 1, -40)
+			tab.Position = UDim2.new(0, 0, 0, 40)
+			tab.BackgroundTransparency = 1
 
-	local Main = Instance.new("Frame")
-	Main.Name = "Main"
-	Main.AnchorPoint = Vector2.new(0.5, 0.5)
-	Main.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-	Main.BorderSizePixel = 0
-	Main.Position = UDim2.new(0.5, 0, 0.5, 0)
-	Main.Size = UDim2.new(0, 500, 0, 400)
-	Main.Parent = ScreenGui
-
-	-- Các thành phần khác sẽ được nối tiếp ở phần 2...
-	local Window = {}
-
-	function Window:MakeTab(tabOptions)
-		print("MakeTab:", tabOptions.Name)
-		local tab = {
-			AddToggle = function(opt) print("Toggle", opt.Name) end,
-			AddButton = function(opt) print("Button", opt.Name) end,
-			AddSlider = function(opt) print("Slider", opt.Name) end,
-			AddDropdown = function(opt) print("Dropdown", opt.Name) end,
-			AddTextbox = function(opt) print("Textbox", opt.Name) end
-		}
-		return tab
-	end
-
-	return Window
+			return {
+				AddLabel = function(text)
+					local lbl = Instance.new("TextLabel", tab)
+					lbl.Size = UDim2.new(1, -20, 0, 30)
+					lbl.Position = UDim2.new(0, 10, 0, 10)
+					lbl.Text = text
+					lbl.TextColor3 = Color3.fromRGB(200, 200, 200)
+					lbl.BackgroundTransparency = 1
+					lbl.TextXAlignment = Enum.TextXAlignment.Left
+					lbl.Font = Enum.Font.Gotham
+					lbl.TextSize = 18
+				end
+			}
+		end
+	}
 end
 
 function OrionLib:Init()
-	print("GUI đã khởi tạo")
-end
-
-function OrionLib:Destroy()
-	for _, v in pairs(CoreGui:GetChildren()) do
-		if v.Name == "Orion" then
-			v:Destroy()
-		end
-	end
+	-- Có thể xử lý logic init nếu muốn
 end
 
 return OrionLib
+
